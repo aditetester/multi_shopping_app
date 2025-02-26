@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:multishopping_app/screens/cartPage_screen.dart';
 import 'package:multishopping_app/screens/homePage_screen.dart';
 import 'package:multishopping_app/screens/orderPage_Screen.dart';
 import 'package:multishopping_app/screens/profilePage_screen.dart';
+import 'package:multishopping_app/widgets/badgeView.dart';
 
-// ignore: must_be_immutable
 class TabViewScreen extends StatefulWidget {
   static final routeName = '/';
 
@@ -38,6 +39,23 @@ class _TabViewScreenState extends State<TabViewScreen> {
   Widget build(BuildContext context) {
     final appBarView = AppBar(
       title: Text("MultiShopping App"),
+      actions: [
+        BadgeView(
+          value: '0',
+          child: FittedBox(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+              icon: Icon(
+                Icons.shopping_cart,
+              ),
+              tooltip: 'Shopping Cart',
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartPageScreen.routeName);
+              },
+            ),
+          ),
+        ),
+      ],
     );
     return Scaffold(
       appBar: appBarView,
@@ -46,7 +64,7 @@ class _TabViewScreenState extends State<TabViewScreen> {
           selectedFontSize: 16,
           selectedIconTheme: IconThemeData(size: 28),
           unselectedIconTheme: IconThemeData(size: 25),
-          selectedItemColor: Colors.amberAccent,
+          selectedItemColor: Colors.amberAccent[400],
           unselectedItemColor: Colors.white,
           currentIndex: page_index,
           onTap: selectPage,
@@ -71,29 +89,3 @@ class _TabViewScreenState extends State<TabViewScreen> {
     );
   }
 }
-// DefaultTabController(
-//       length: 2,
-//       child: Scaffold(
-//         appBar: AppBar(
-//           title: Text("Meals"),
-//           bottom: TabBar(
-//             labelStyle: TextStyle(
-//                 fontSize: 20, color: Colors.black, fontWeight: FontWeight.w500),
-//             tabs: [
-//               Tab(
-//                 icon: Icon(Icons.category),
-//                 text: "Categories",
-//               ),
-//               Tab(
-//                 icon: Icon(Icons.favorite),
-//                 text: "Favourate",
-//               ),
-//             ],
-//           ),
-//         ),
-//         body: TabBarView(children: [
-//           CategoriesScreen(),
-//           FavourateScreen(),
-//         ]),
-//       ),
-//     );

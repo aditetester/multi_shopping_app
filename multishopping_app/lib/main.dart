@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:multishopping_app/screens/cartPage_screen.dart';
 import 'package:multishopping_app/screens/tabView_screen.dart';
 
 void main() {
@@ -8,7 +9,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
         appBarTheme: AppBarTheme(
-          backgroundColor: Colors.deepPurple[200],
+          backgroundColor: Colors.deepPurple[100],
         ),
         bottomAppBarTheme: BottomAppBarTheme(
           color: Colors.deepPurple[300],
@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
       initialRoute: TabViewScreen.routeName,
       routes: {
         TabViewScreen.routeName: (ctx) => TabViewScreen(),
+        CartPageScreen.routeName: (ctx) => CartPageScreen(),
       },
     );
   }
