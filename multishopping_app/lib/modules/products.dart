@@ -2,18 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'Product_module.dart';
 
-class Products with ChangeNotifier {
+class Products {
   Product findById(String id) {
     return _items.firstWhere((prod) => prod.id == id);
-  }
-
-  void toggleTask(Product task) {
-    task.togalfavchange();
-    notifyListeners();
-  }
-
-  void addProduct() {
-    notifyListeners();
   }
 }
 
@@ -101,8 +92,4 @@ Product findById(String id) {
 
 final productProvider = Provider((ref) {
   return _items;
-});
-
-final favourateProducts = Provider((ref) {
-  return _items.where((prod) => prod.isFavourate).toList();
 });

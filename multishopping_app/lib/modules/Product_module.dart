@@ -8,7 +8,7 @@ class Product with ChangeNotifier {
   final String discription;
   final double price;
   final List<String> categories; 
-  bool isFavourate = false;
+  
 
   Product({
     required this.id,
@@ -17,11 +17,6 @@ class Product with ChangeNotifier {
     required this.discription,
     required this.price,
     required this.categories,
-    this.isFavourate = false,
+    
   });
-
-  void togalfavchange() {
-    isFavourate = !isFavourate;
-    notifyListeners();
-  }
 }

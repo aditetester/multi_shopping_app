@@ -12,7 +12,7 @@ class HomePageScreen extends StatelessWidget {
       child: GridView(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 300,
-          childAspectRatio: 2.7 / 3,
+          childAspectRatio: 2.4 / 3,
           crossAxisSpacing: 20,
           mainAxisSpacing: 20,
         ),

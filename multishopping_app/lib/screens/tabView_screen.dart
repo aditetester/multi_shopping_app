@@ -38,7 +38,7 @@ class _TabViewScreenState extends State<TabViewScreen> {
   @override
   Widget build(BuildContext context) {
     final appBarView = AppBar(
-      title: Text("MultiShopping App"),
+      title: Text("Multishopping App"),
       actions: [
         BadgeView(
           value: '0',
