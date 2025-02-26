@@ -58,6 +58,7 @@ class _TabViewScreenState extends State<TabViewScreen> {
       ],
     );
     return Scaffold(
+      backgroundColor: Colors.amber[50],
       appBar: appBarView,
       body: pages[page_index],
       bottomNavigationBar: BottomNavigationBar(
