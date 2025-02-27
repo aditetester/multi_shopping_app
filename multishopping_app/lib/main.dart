@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multishopping_app/screens/cartPage_screen.dart';
+import 'package:multishopping_app/screens/products_screen.dart';
 import 'package:multishopping_app/screens/tabView_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -27,6 +29,7 @@ class MyApp extends StatelessWidget {
       routes: {
         TabViewScreen.routeName: (ctx) => TabViewScreen(),
         CartPageScreen.routeName: (ctx) => CartPageScreen(),
+        ProductsScreen.routeName: (ctx) => ProductsScreen(),
       },
     );
   }

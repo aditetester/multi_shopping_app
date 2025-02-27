@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:multishopping_app/screens/products_screen.dart';
 
 class CategoriesItem extends StatelessWidget {
   final String id;
@@ -16,10 +17,10 @@ class CategoriesItem extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap: () {
-          // Navigator.of(context).pushNamed(
-          //   ProductViewScreen.routeName,
-          //   arguments: singleProduct.id,
-          // );
+          Navigator.of(context).pushNamed(
+            ProductsScreen.routeName,
+            arguments: id,
+          );
         },
         child: GridTile(
           footer: GridTileBar(

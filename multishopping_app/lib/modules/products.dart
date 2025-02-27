@@ -1,13 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'Product_module.dart';
 
-class Products {
-  Product findById(String id) {
-    return _items.firstWhere((prod) => prod.id == id);
-  }
-}
-
+// class Products {
+//   Product findById(String id) {
+//     return _items.firstWhere((prod) => prod.id == id);
+//   }
+// }
 final List<Product> _items = [
   Product(
     id: 'p1',
@@ -93,3 +91,4 @@ Product findById(String id) {
 final productProvider = Provider((ref) {
   return _items;
 });
+
