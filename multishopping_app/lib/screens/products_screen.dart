@@ -4,26 +4,28 @@ import 'package:multishopping_app/modules/products.dart';
 import 'package:multishopping_app/screens/cartPage_screen.dart';
 import 'package:multishopping_app/widgets/badgeView.dart';
 
-class ProductsScreen extends ConsumerWidget {
+class ProductsScreen extends ConsumerStatefulWidget {
   static final routeName = '/ProductScreen';
   const ProductsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ProductsScreen> createState() => _ProductsScreenState();
+}
+
+class _ProductsScreenState extends ConsumerState<ProductsScreen> {
+  @override
+  Widget build(BuildContext context) {
     final categoryId = ModalRoute.of(context)?.settings.arguments as String;
-    final allproducts = ref.watch(productProvider);
-    final products = allproducts.where(
-      (product) {
-        return product.categories.contains(categoryId);
-      },
-    ).toList();
+    final products =
+        ref.read(productNotifierProvider.notifier).findById(categoryId);
+    final total = ref.read(productNotifierProvider.notifier).findtotal();
 
     return Scaffold(
       appBar: AppBar(
         title: Text("Products"),
         actions: [
           BadgeView(
-            value: '0',
+            value: total.toString(),
             child: FittedBox(
               alignment: Alignment.centerRight,
               child: IconButton(
@@ -47,8 +49,26 @@ class ProductsScreen extends ConsumerWidget {
               products[i].imageUrl,
             ),
           ),
-          title: Text(products[i].title),
-          subtitle: Text(products[i].discription),
+          title: Text(
+            products[i].title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(products[i].discription),
+              Text(
+                '\$ ${products[i].price}',
+                style: TextStyle(),
+              ),
+            ],
+          ),
+          trailing: TextButton(
+            onPressed: () {},
+            child: Text("Add to Cart"),
+          ),
           onTap: () {},
         ),
       ),

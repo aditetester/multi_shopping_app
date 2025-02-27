@@ -1,11 +1,22 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'Product_module.dart';
+part 'products.g.dart';
 
-// class Products {
-//   Product findById(String id) {
-//     return _items.firstWhere((prod) => prod.id == id);
-//   }
-// }
+class Products extends Notifier<Set<Product>>{
+  @override
+  Set<Product> build() {
+    throw UnimplementedError();
+  }
+
+  List<Product> findById(String id){
+    return _items.where((prod) => prod.categories.contains(id)).toList();
+  }
+
+  int findtotal(){
+    return _items.length;
+  }   
+}
+
 final List<Product> _items = [
   Product(
     id: 'p1',
@@ -84,11 +95,12 @@ final List<Product> _items = [
           'https://media.istockphoto.com/id/1350560575/photo/pair-of-blue-running-sneakers-on-white-background-isolated.jpg?s=612x612&w=0&k=20&c=A3w_a9q3Gz-tWkQL6K00xu7UHdN5LLZefzPDp-wNkSU='),
 ];
 
-Product findById(String id) {
-  return _items.firstWhere((prod) => prod.id == id);
-}
-
-final productProvider = Provider((ref) {
-  return _items;
+final productNotifierProvider = NotifierProvider<Products, Set<Product>>((){
+  return Products();
 });
+
+@riverpod
+List<Product> allProduct(ref){
+  return _items;
+}
 
