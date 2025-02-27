@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:multishopping_app/screens/products_screen.dart';
+import 'package:multishopping_app/screens/tabView_screen.dart';
 
 class CategoriesItem extends StatelessWidget {
   final String id;
@@ -10,18 +11,23 @@ class CategoriesItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void productView() async {
+      final refresh = await Navigator.of(context).pushNamed(
+        ProductsScreen.routeName,
+        arguments: id,
+      );
+      if (refresh == 'refresh') {
+        Navigator.of(context).popAndPushNamed(TabViewScreen.routeName);
+      }
+    }
+
     return ClipRRect(
       borderRadius: BorderRadius.only(
         bottomLeft: Radius.circular(10),
         bottomRight: Radius.circular(10),
       ),
       child: GestureDetector(
-        onTap: () {
-          Navigator.of(context).pushNamed(
-            ProductsScreen.routeName,
-            arguments: id,
-          );
-        },
+        onTap: () => productView(),
         child: GridTile(
           footer: GridTileBar(
             backgroundColor: Colors.black87,

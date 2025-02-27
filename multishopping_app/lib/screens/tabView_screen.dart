@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:multishopping_app/modules/cart.dart';
 import 'package:multishopping_app/screens/cartPage_screen.dart';
 import 'package:multishopping_app/screens/homePage_screen.dart';
 import 'package:multishopping_app/screens/orderPage_Screen.dart';
 import 'package:multishopping_app/screens/profilePage_screen.dart';
 import 'package:multishopping_app/widgets/badgeView.dart';
 
-class TabViewScreen extends StatefulWidget {
+class TabViewScreen extends ConsumerStatefulWidget {
   static final routeName = '/';
 
   TabViewScreen({super.key});
 
   @override
-  State<TabViewScreen> createState() => _TabViewScreenState();
+  ConsumerState<TabViewScreen> createState() => _TabViewScreenState();
 }
 
-class _TabViewScreenState extends State<TabViewScreen> {
+class _TabViewScreenState extends ConsumerState<TabViewScreen> {
   var pages;
 
   int page_index = 0;
@@ -35,13 +37,15 @@ class _TabViewScreenState extends State<TabViewScreen> {
     });
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     final appBarView = AppBar(
       title: Text("Multishopping App"),
       actions: [
         BadgeView(
-          value: '0',
+          value: ref.read(cartNotifierProvider.notifier).itemCount.toString(),
           child: FittedBox(
             alignment: Alignment.centerRight,
             child: IconButton(
