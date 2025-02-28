@@ -1,7 +1,19 @@
-import 'package:multishopping_app/modules/Product_module.dart';
-import 'package:multishopping_app/modules/cart_module.dart';
+import 'package:multishopping_app/modules/products.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'cart.g.dart';
+class CartItem {
+  final String id;
+  final String title;
+  final int quantity;
+  final double price;
+
+  CartItem({
+    required this.id,
+    required this.title,
+    required this.quantity,
+    required this.price,
+  });
+}
 
 class Cart extends Notifier<Set<Product>> {
   @override
@@ -87,6 +99,6 @@ final cartNotifierProvider = NotifierProvider<Cart, Set<Product>>(() {
 Map<String, CartItem> _cartItems = {};
 
 @riverpod
-Map<String, CartItem> allCartItemd(ref) {
+Map<String, CartItem> allCartItems(ref) {
   return _cartItems;
 }

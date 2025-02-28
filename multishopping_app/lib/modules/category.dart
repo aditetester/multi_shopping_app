@@ -1,4 +1,15 @@
-import 'category_module.dart';
+class Category {
+  final String id;
+  final String title;
+  final String image;
+
+  const Category({
+    required this.id,
+    required this.title,
+    this.image = '',
+  });
+}
+
 
 const DUMMY_CATEGORIES = [
   Category(

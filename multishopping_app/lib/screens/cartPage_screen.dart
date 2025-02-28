@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multishopping_app/modules/cart.dart';
-import 'package:multishopping_app/widgets/placeOrder.dart';
+import 'package:multishopping_app/modules/order.dart';
+
 
 class CartPageScreen extends ConsumerStatefulWidget {
   static final routeName = '/cartPageScreen';
@@ -10,6 +11,7 @@ class CartPageScreen extends ConsumerStatefulWidget {
   @override
   ConsumerState<CartPageScreen> createState() => _CartPageScreenState();
 }
+
 class _CartPageScreenState extends ConsumerState<CartPageScreen> {
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,23 @@ class _CartPageScreenState extends ConsumerState<CartPageScreen> {
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
-                  OrderButton(cart: cart)
+                  TextButton(
+                    onPressed: (cart.totalAmount <= 0)
+                        ? null
+                        : () {
+                            setState(() {
+                              ref.read(orderNotifierProvider.notifier).addOrder(
+                                    cart.allCartItems.values.toList(),
+                                    cart.totalAmount,
+                                  );
+                              cart.clear();
+                            });
+                          },
+                    child: Text(
+                      'ORDER NOW',
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ),
+                  ),
                 ],
               ),
             ),
