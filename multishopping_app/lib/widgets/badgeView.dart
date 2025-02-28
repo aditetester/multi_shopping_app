@@ -17,12 +17,12 @@ class BadgeView extends StatelessWidget {
         child,
         Positioned(
           right: 8,
-          top: 8,
+          top: 2,
           child: Container(
             padding: EdgeInsets.all(2.0),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              color: value == '0' ? Colors.transparent : Colors.red,
+              borderRadius: BorderRadius.circular(11.0),
+              color: value == '0' ? Colors.transparent : Colors.orangeAccent,
             ),
             constraints: BoxConstraints(
               minWidth: 16,
@@ -31,9 +31,7 @@ class BadgeView extends StatelessWidget {
             child: Text(
               value == '0' ? "" : value,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 10,
-              ),
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
             ),
           ),
         )

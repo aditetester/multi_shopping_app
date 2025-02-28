@@ -14,6 +14,7 @@ class CartItem {
     required this.price,
   });
 }
+// State refresh<State>(Refreshable<State> provider)
 
 class Cart extends Notifier<Set<Product>> {
   @override

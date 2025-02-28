@@ -50,14 +50,16 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {
-          Navigator.pop(context,'refresh');
-        },),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context, 'refresh');
+          },
+        ),
         title: Text("Products"),
         actions: [
           BadgeView(
-            value:
-                ref.read(cartNotifierProvider.notifier).itemCount.toString(),
+            value: ref.read(cartNotifierProvider.notifier).itemCount.toString(),
             child: FittedBox(
               alignment: Alignment.centerRight,
               child: IconButton(

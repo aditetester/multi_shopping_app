@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:multishopping_app/modules/cart.dart';
-import 'package:multishopping_app/screens/cartPage_screen.dart';
 import 'package:multishopping_app/screens/homePage_screen.dart';
 import 'package:multishopping_app/screens/orderPage_Screen.dart';
 import 'package:multishopping_app/screens/profilePage_screen.dart';
-import 'package:multishopping_app/widgets/badgeView.dart';
 
-class TabViewScreen extends ConsumerStatefulWidget {
+class TabViewScreen extends StatefulWidget {
   static final routeName = '/';
 
-  TabViewScreen({super.key});
+  const TabViewScreen({super.key});
 
   @override
-  ConsumerState<TabViewScreen> createState() => _TabViewScreenState();
+  State<TabViewScreen> createState() => _TabViewScreenState();
 }
 
-class _TabViewScreenState extends ConsumerState<TabViewScreen> {
-  var pages;
+class _TabViewScreenState extends State<TabViewScreen> {
+  var pages = [];
 
   int page_index = 0;
 
@@ -37,33 +33,9 @@ class _TabViewScreenState extends ConsumerState<TabViewScreen> {
     });
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
-    final appBarView = AppBar(
-      title: Text("Multishopping App"),
-      actions: [
-        BadgeView(
-          value: ref.read(cartNotifierProvider.notifier).itemCount.toString(),
-          child: FittedBox(
-            alignment: Alignment.centerRight,
-            child: IconButton(
-              icon: Icon(
-                Icons.shopping_cart,
-              ),
-              tooltip: 'Shopping Cart',
-              onPressed: () {
-                Navigator.of(context).pushNamed(CartPageScreen.routeName);
-              },
-            ),
-          ),
-        ),
-      ],
-    );
     return Scaffold(
-      backgroundColor: Colors.amber[50],
-      appBar: appBarView,
       body: pages[page_index],
       bottomNavigationBar: BottomNavigationBar(
           selectedFontSize: 16,

@@ -8,10 +8,10 @@ import '../modules/order.dart' as ord;
 class OrderDetailItem extends StatefulWidget {
   final ord.OrderItem order;
 
-  OrderDetailItem(this.order);
+  const OrderDetailItem(this.order, {super.key});
 
   @override
-  _OrderDetailItemState createState() => _OrderDetailItemState();
+  State<OrderDetailItem> createState() => _OrderDetailItemState();
 }
 
 class _OrderDetailItemState extends State<OrderDetailItem> {
@@ -21,7 +21,7 @@ class _OrderDetailItemState extends State<OrderDetailItem> {
     return AnimatedContainer(
       duration: Duration(milliseconds: 300),
       height:
-          _expanded ? min(widget.order.products.length * 20.0 + 110, 200) : 95,
+          _expanded ? min(widget.order.products.length * 20.0 + 120, 200) : 95,
       child: Card(
         margin: EdgeInsets.all(10),
         child: Column(
@@ -44,7 +44,7 @@ class _OrderDetailItemState extends State<OrderDetailItem> {
               duration: Duration(milliseconds: 300),
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
               height: _expanded
-                  ? min(widget.order.products.length * 20.0 + 10, 100)
+                  ? min(widget.order.products.length * 20.0 + 20, 120)
                   : 0,
               child: ListView(
                 children: widget.order.products

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multishopping_app/modules/cart.dart';
 import 'package:multishopping_app/modules/order.dart';
 
-
 class CartPageScreen extends ConsumerStatefulWidget {
   static final routeName = '/cartPageScreen';
   const CartPageScreen({super.key});
@@ -18,7 +17,7 @@ class _CartPageScreenState extends ConsumerState<CartPageScreen> {
     final cart = ref.read(cartNotifierProvider.notifier);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Cart Products"),
+        title: Text("Yours Cart"),
       ),
       body: Column(
         children: <Widget>[
@@ -45,7 +44,15 @@ class _CartPageScreenState extends ConsumerState<CartPageScreen> {
                   ),
                   TextButton(
                     onPressed: (cart.totalAmount <= 0)
-                        ? null
+                        ? () {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                'Cart is Empty..!',
+                              ),
+                              duration: Duration(seconds: 2),
+                            ));
+                          }
                         : () {
                             setState(() {
                               ref.read(orderNotifierProvider.notifier).addOrder(
@@ -53,6 +60,15 @@ class _CartPageScreenState extends ConsumerState<CartPageScreen> {
                                     cart.totalAmount,
                                   );
                               cart.clear();
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(
+                                  'Order Placed Successfully..!',
+                                ),
+                                duration: Duration(seconds: 2),
+                              ));
                             });
                           },
                     child: Text(

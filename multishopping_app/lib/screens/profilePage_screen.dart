@@ -5,8 +5,14 @@ class ProfilePageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text("Profile Page"),
+    final appBarView = AppBar(
+      title: Text("Your Profile"),
+    );
+    return Scaffold(
+      appBar: appBarView,
+      body: Center(
+        child: Text("Your Profile"),
+      ),
     );
   }
 }

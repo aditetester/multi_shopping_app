@@ -18,6 +18,8 @@ class CategoriesItem extends StatelessWidget {
       );
       if (refresh == 'refresh') {
         Navigator.of(context).popAndPushNamed(TabViewScreen.routeName);
+      }else{
+        Navigator.of(context).popAndPushNamed(TabViewScreen.routeName);
       }
     }
 
@@ -37,9 +39,13 @@ class CategoriesItem extends StatelessWidget {
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
           ),
-          child: Image.network(
-            image,
-            fit: BoxFit.fill,
+          child:  Hero(
+            tag: id,
+            child: FadeInImage(
+              placeholder: AssetImage('assets/images/product-placeholder.png'),
+              image: NetworkImage(image),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),
