@@ -3,12 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multishopping_app/modules/cart.dart';
 import 'package:multishopping_app/widgets/placeOrder.dart';
 
-class CartPageScreen extends ConsumerWidget {
+class CartPageScreen extends ConsumerStatefulWidget {
   static final routeName = '/cartPageScreen';
   const CartPageScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CartPageScreen> createState() => _CartPageScreenState();
+}
+class _CartPageScreenState extends ConsumerState<CartPageScreen> {
+  @override
+  Widget build(BuildContext context) {
     final cart = ref.read(cartNotifierProvider.notifier);
     return Scaffold(
       appBar: AppBar(
@@ -95,10 +99,11 @@ class CartPageScreen extends ConsumerWidget {
                     );
                   },
                   onDismissed: (direction) {
-                    // Provider.of<Cart>(context, listen: false).removeItem(productId);
-                    ref
-                        .read(cartNotifierProvider.notifier)
-                        .removeItem(productId);
+                    setState(() {
+                      ref
+                          .read(cartNotifierProvider.notifier)
+                          .removeItem(productId);
+                    });
                   },
                   child: Card(
                     margin: EdgeInsets.symmetric(
