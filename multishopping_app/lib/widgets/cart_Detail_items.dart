@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:multishopping_app/modules/cart.dart';
 
-class CartDetailItem extends StatelessWidget {
+class CartDetailItem extends ConsumerWidget {
   final String id;
   final String productId;
   final double price;
@@ -16,7 +18,7 @@ class CartDetailItem extends StatelessWidget {
   );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Dismissible(
       key: ValueKey(id),
       background: Container(
@@ -38,29 +40,30 @@ class CartDetailItem extends StatelessWidget {
         return showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
-                title: Text('Are you sure?'),
-                content: Text(
-                  'Do you want to remove the item from the cart?',
-                ),
-                actions: <Widget>[
-                  TextButton(
-                    child: Text('No'),
-                    onPressed: () {
-                      Navigator.of(ctx).pop(false);
-                    },
-                  ),
-                  TextButton(
-                    child: Text('Yes'),
-                    onPressed: () {
-                      Navigator.of(ctx).pop(true);
-                    },
-                  ),
-                ],
+            title: Text('Are you sure?'),
+            content: Text(
+              'Do you want to remove the item from the cart?',
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('No'),
+                onPressed: () {
+                  Navigator.of(ctx).pop(false);
+                },
               ),
+              TextButton(
+                child: Text('Yes'),
+                onPressed: () {
+                  Navigator.of(ctx).pop(true);
+                },
+              ),
+            ],
+          ),
         );
       },
       onDismissed: (direction) {
         // Provider.of<Cart>(context, listen: false).removeItem(productId);
+        ref.read(cartNotifierProvider.notifier).removeItem(productId);
       },
       child: Card(
         margin: EdgeInsets.symmetric(
