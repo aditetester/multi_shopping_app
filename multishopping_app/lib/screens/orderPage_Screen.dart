@@ -56,11 +56,18 @@ class OrderPageScreen extends ConsumerWidget {
                 children: [
                   FittedBox(
                     fit: BoxFit.fitWidth,
-                    child: Image.asset('assets/images/ordernotfound2.png'),
+                    child: Icon(
+                      Icons.content_paste_search_outlined,
+                      size: 100,
+                    ),
                   ),
                   Container(
-                    alignment: Alignment.bottomCenter,
-                    child: Text("No Order Placed Yet..!", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),))
+                      alignment: Alignment.bottomCenter,
+                      child: Text(
+                        "No Order Placed Yet..!",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ))
                 ],
               ),
             ),
