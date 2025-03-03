@@ -20,30 +20,28 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     final products =
         ref.read(productNotifierProvider.notifier).findById(categoryId);
 
+    void removeItem(String id) {
+      setState(() {
+        ref.read(cartNotifierProvider.notifier).removeSingleItem(id);
+      });
+    }
+
     void addToCart(Product prod) {
       setState(() {
         ref
             .read(cartNotifierProvider.notifier)
-            .addItems(prod.id, prod.title, prod.price);
+            .addItems(prod.id, prod.title, prod.price, true);
       });
 
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Added item to cart!',
+            'item Added to cart!',
           ),
           duration: Duration(seconds: 2),
           action: SnackBarAction(
-            label: 'UNDO',
-            onPressed: () {
-              setState(() {
-                ref
-                    .read(cartNotifierProvider.notifier)
-                    .removeSingleItem(prod.id);
-              });
-            },
-          ),
+              label: 'UNDO', onPressed: () => removeItem(prod.id)),
         ),
       );
     }
@@ -100,10 +98,30 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
               ),
             ],
           ),
-          trailing: TextButton(
-            onPressed: () => addToCart(products[i]),
-            child: Text("Add to Cart"),
-          ),
+          trailing: ref
+                  .read(cartNotifierProvider.notifier)
+                  .isAvailableInCart(products[i].id)
+              ? FittedBox(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: () => addToCart(products[i]),
+                        icon: Icon(Icons.add),
+                      ),
+                      Text(
+                          "${ref.read(cartNotifierProvider.notifier).particularItemTotal(products[i].id)}"),
+                      IconButton(
+                        onPressed: () => removeItem(products[i].id),
+                        icon: Icon(Icons.remove),
+                      )
+                    ],
+                  ),
+                )
+              : TextButton(
+                  onPressed: () => addToCart(products[i]),
+                  child: Text("Add to Cart"),
+                ),
         ),
       ),
     );

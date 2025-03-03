@@ -1,21 +1,22 @@
 import 'package:multishopping_app/modules/products.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'cart.g.dart';
+
 class CartItem {
   final String id;
   final String title;
   final int quantity;
   final double price;
+  bool isItemInCart;
 
   CartItem({
     required this.id,
     required this.title,
     required this.quantity,
     required this.price,
+    this.isItemInCart = false,
   });
 }
-// State refresh<State>(Refreshable<State> provider)
-
 class Cart extends Notifier<Set<Product>> {
   @override
   Set<Product> build() {
@@ -42,6 +43,7 @@ class Cart extends Notifier<Set<Product>> {
     String productId,
     String title,
     double price,
+    bool inCart,
   ) {
     if (_cartItems.containsKey(productId)) {
       _cartItems.update(
@@ -51,6 +53,7 @@ class Cart extends Notifier<Set<Product>> {
           title: oldvalue.title,
           price: oldvalue.price,
           quantity: oldvalue.quantity + 1,
+          isItemInCart: oldvalue.isItemInCart,
         ),
       );
     } else {
@@ -61,9 +64,22 @@ class Cart extends Notifier<Set<Product>> {
           title: title,
           price: price,
           quantity: 1,
+          isItemInCart: inCart,
         ),
       );
     }
+  }
+
+  bool isAvailableInCart(String productId) {
+    if (_cartItems.containsKey(productId)) {
+      return _cartItems[productId]!.isItemInCart;
+    } else {
+      return false;
+    }
+  }
+
+  int particularItemTotal(String productId) {
+    return _cartItems[productId]!.quantity;
   }
 
   void removeItem(String productId) {
@@ -82,6 +98,7 @@ class Cart extends Notifier<Set<Product>> {
                 title: existingCartItem.title,
                 price: existingCartItem.price,
                 quantity: existingCartItem.quantity - 1,
+                isItemInCart: existingCartItem.isItemInCart,
               ));
     } else {
       _cartItems.remove(productId);
