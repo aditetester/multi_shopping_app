@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:multishopping_app/screens/auth_screen.dart';
 import 'package:multishopping_app/screens/cartPage_screen.dart';
 import 'package:multishopping_app/screens/products_screen.dart';
 import 'package:multishopping_app/screens/tabView_screen.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         TabViewScreen.routeName: (ctx) => TabViewScreen(),
         CartPageScreen.routeName: (ctx) => CartPageScreen(),
         ProductsScreen.routeName: (ctx) => ProductsScreen(),
+        AuthScreen.routeName: (ctx) => AuthScreen(),
       },
     );
   }
