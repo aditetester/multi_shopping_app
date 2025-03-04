@@ -12,6 +12,7 @@ class HomePageScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    
     final appBarView = AppBar(
       title: Text("Multishopping App"),
       actions: [
