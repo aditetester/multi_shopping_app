@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multishopping_app/modules/auth.dart';
+import 'package:multishopping_app/modules/products.dart';
 import 'package:multishopping_app/screens/auth_screen.dart';
 import 'package:multishopping_app/screens/homePage_screen.dart';
 import 'package:multishopping_app/screens/orderPage_Screen.dart';
@@ -22,6 +23,8 @@ class _TabViewScreenState extends ConsumerState<TabViewScreen> {
 
   @override
   void initState() {
+    ref.read(productNotifierProvider.notifier).fetchAndSetProducts();
+
     pages = [
       HomePageScreen(),
       OrderPageScreen(),

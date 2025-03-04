@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:multishopping_app/modules/cart.dart';
 import 'package:multishopping_app/modules/products.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 part 'orders.g.dart';
-
 
 class OrderItem {
   final String id;
@@ -18,6 +21,8 @@ class OrderItem {
   });
 }
 
+String _authToken = '';
+String _userId = '';
 List<OrderItem> _orders = [];
 
 class Orders extends Notifier<Set<Product>> {
@@ -30,13 +35,70 @@ class Orders extends Notifier<Set<Product>> {
     return [..._orders];
   }
 
-  void addOrder(List<CartItem> cartProducts, double total) {
+  Future<void> fetchAndSetOrders() async {
+    _orders = [];
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    _authToken = prefs.getString('token').toString();
+    _userId = prefs.getString('userid').toString();
+    Uri url = Uri.parse(
+        'https://shoppingapp-e1541-default-rtdb.firebaseio.com/orders/$_userId.json?auth=$_authToken');
+    final response = await http.get(url);
+    final List<OrderItem> loadedOrders = [];
+    final extractedData = json.decode(response.body) as Map<String, dynamic>;
+    if (extractedData.isEmpty) {
+      return;
+    }
+    extractedData.forEach((orderId, orderData) {
+      loadedOrders.add(
+        OrderItem(
+          id: orderId,
+          amount: orderData['amount'],
+          dateTime: DateTime.parse(orderData['dateTime']),
+          products: (orderData['products'] as List<dynamic>)
+              .map(
+                (item) => CartItem(
+                  id: item['id'],
+                  price: item['price'],
+                  quantity: item['quantity'],
+                  title: item['title'],
+                ),
+              )
+              .toList(),
+        ),
+      );
+    });
+    _orders = loadedOrders.reversed.toList();
+  }
+
+  Future<void> addOrder(List<CartItem> cartProducts, double total) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    _authToken = prefs.getString('token').toString();
+    _userId = prefs.getString('userid').toString();
+    Uri url = Uri.parse(
+        'https://shoppingapp-e1541-default-rtdb.firebaseio.com/orders/$_userId.json?auth=$_authToken');
+
+    final timestamp = DateTime.now();
+    final response = await http.post(
+      url,
+      body: json.encode({
+        'amount': total,
+        'dateTime': timestamp.toIso8601String(),
+        'products': cartProducts
+            .map((cp) => {
+                  'id': cp.id,
+                  'title': cp.title,
+                  'quantity': cp.quantity,
+                  'price': cp.price,
+                })
+            .toList(),
+      }),
+    );
     _orders.insert(
       0,
       OrderItem(
-        id: DateTime.now().toString(),
+        id: json.decode(response.body)['name'],
         amount: total,
-        dateTime: DateTime.now(),
+        dateTime: timestamp,
         products: cartProducts,
       ),
     );
@@ -51,4 +113,3 @@ final orderNotifierProvider = NotifierProvider<Orders, Set<Product>>(() {
 List<OrderItem> allOrderItems(ref) {
   return _orders;
 }
-

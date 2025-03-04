@@ -12,6 +12,13 @@ class OrderPageScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    late final orderData;
+    Future<bool> fatchData() async {
+      await ref.read(orderNotifierProvider.notifier).fetchAndSetOrders();
+      orderData = ref.read(orderNotifierProvider.notifier);
+      return true;
+    }
+
     final appBarView = AppBar(
       title: Text("Your Orders"),
       actions: [
@@ -41,36 +48,45 @@ class OrderPageScreen extends ConsumerWidget {
       ],
     );
 
-    final orderData = ref.read(orderNotifierProvider.notifier);
     return Scaffold(
       appBar: appBarView,
-      body: orderData.orders.length.toString() != '0'
-          ? ListView.builder(
-              itemCount: orderData.orders.length,
-              itemBuilder: (ctx, i) => OrderDetailItem(orderData.orders[i]),
-            )
-          : Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Icon(
-                      Icons.content_paste_search_outlined,
-                      size: 100,
-                    ),
-                  ),
-                  Container(
-                      alignment: Alignment.bottomCenter,
-                      child: Text(
-                        "No Order Placed Yet..!",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ))
-                ],
-              ),
-            ),
+      body: FutureBuilder(
+        future: fatchData(),
+        builder: (context, snapshot) {
+          return snapshot.data == true
+              ? orderData.orders.length.toString() != '0'
+                  ? ListView.builder(
+                      itemCount: orderData.orders.length,
+                      itemBuilder: (ctx, i) =>
+                          OrderDetailItem(orderData.orders[i]),
+                    )
+                  : Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Icon(
+                              Icons.content_paste_search_outlined,
+                              size: 100,
+                            ),
+                          ),
+                          Container(
+                              alignment: Alignment.bottomCenter,
+                              child: Text(
+                                "No Order Placed Yet..!",
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ))
+                        ],
+                      ),
+                    )
+              : Center(
+                  child: CircularProgressIndicator(),
+                );
+        },
+      ),
     );
   }
 }

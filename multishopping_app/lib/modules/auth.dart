@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './http_exception.dart';
@@ -17,10 +18,10 @@ class Auth extends Notifier<State> {
     _userId = prefs.getString('userid') ?? '';
     _emailId = prefs.getString('emailid') ?? '';
 
-    return token != '';
+    return gettoken != '';
   }
 
-  String get token {
+  String get gettoken {
     if (_token.toString().isNotEmpty) {
       return _token;
     }
@@ -28,7 +29,7 @@ class Auth extends Notifier<State> {
     return '';
   }
 
-  String get userId {
+  String get getuserId {
     return _userId;
   }
 
@@ -57,7 +58,7 @@ class Auth extends Notifier<State> {
       _emailId = email;
       prefs.setString('token', responseData['idToken']);
       prefs.setString('userid', responseData['localId']);
-      prefs.setString('emailid', email);
+      prefs.setString('emailid', _emailId);
 
       if (urlSegment == 'signupNewUser') {
         Uri url2 = Uri.parse(
@@ -82,12 +83,10 @@ class Auth extends Notifier<State> {
 
   Future<void> changePassword(String newPassword) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    
+
     print('Token : $_token');
     if (_token.isEmpty) {
-      
       throw Exception('User not authenticated');
-      
     }
     final url = Uri.parse(
         'https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDij4_Q4Hr_tXy8h3-th3ZL7R8dXwliFfA');
@@ -108,7 +107,9 @@ class Auth extends Notifier<State> {
         throw Exception(responseData['error']['message']);
       }
       _token = responseData['idToken'];
+      _userId = responseData['localId'];
       prefs.setString('token', _token);
+      prefs.setString('userid', _userId);
     } catch (error) {
       rethrow;
     }

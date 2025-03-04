@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:multishopping_app/modules/products.dart';
 import 'package:multishopping_app/screens/products_screen.dart';
 import 'package:multishopping_app/screens/tabView_screen.dart';
 
-class CategoriesItem extends ConsumerStatefulWidget {
+class CategoriesItem extends StatelessWidget {
   final String id;
   final String title;
   final String image;
@@ -12,22 +10,11 @@ class CategoriesItem extends ConsumerStatefulWidget {
   const CategoriesItem(this.id, this.title, this.image, {super.key});
 
   @override
-  ConsumerState<CategoriesItem> createState() => _CategoriesItemState();
-}
-
-class _CategoriesItemState extends ConsumerState<CategoriesItem> {
-  @override
-  void initState() {
-    ref.read(productNotifierProvider.notifier).fetchAndSetProducts();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     void productView() async {
       final refresh = await Navigator.of(context).pushNamed(
         ProductsScreen.routeName,
-        arguments: widget.id,
+        arguments: id,
       );
       if (refresh == 'refresh') {
         Navigator.of(context).popAndPushNamed(TabViewScreen.routeName);
@@ -47,16 +34,16 @@ class _CategoriesItemState extends ConsumerState<CategoriesItem> {
           footer: GridTileBar(
             backgroundColor: Colors.black87,
             title: Text(
-              widget.title,
+              title,
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
           ),
           child: Hero(
-            tag: widget.id,
+            tag: id,
             child: FadeInImage(
               placeholder: AssetImage('assets/images/product-placeholder.png'),
-              image: NetworkImage(widget.image),
+              image: NetworkImage(image),
               fit: BoxFit.cover,
             ),
           ),
