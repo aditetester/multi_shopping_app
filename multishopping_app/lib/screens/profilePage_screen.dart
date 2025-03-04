@@ -17,7 +17,19 @@ class ProfilePageScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageScreenState extends ConsumerState<ProfilePageScreen> {
-  
+  String? email;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> setEmail() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    email = prefs.getString('emailid');
+    
+  }
+
   final Map<String, String> _authData = {
     'password': '',
   };
@@ -25,8 +37,6 @@ class _ProfilePageScreenState extends ConsumerState<ProfilePageScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _reEnterPasswordController =
       TextEditingController();
-
-  String? email = 'Xyz@gmail.com';
 
   void _showErrorDialog(String message) {
     showDialog(
@@ -47,17 +57,15 @@ class _ProfilePageScreenState extends ConsumerState<ProfilePageScreen> {
   }
 
   Future<void> _updatePassword() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    email = prefs.getString('token');
     if (!_formKey.currentState!.validate()) {
       // Invalid!
       return;
     }
     _formKey.currentState?.save();
     String newPassword = _passwordController.text;
-    String ReEnterNewPassword = _reEnterPasswordController.text;
+    String reEnterNewPassword = _reEnterPasswordController.text;
 
-    if (newPassword.isNotEmpty && ReEnterNewPassword.isNotEmpty) {
+    if (newPassword.isNotEmpty && reEnterNewPassword.isNotEmpty) {
       try {
         await ref.read(authNotifierProvider.notifier).changePassword(
               _authData['password'] as String,
@@ -134,10 +142,16 @@ class _ProfilePageScreenState extends ConsumerState<ProfilePageScreen> {
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     )),
-                Text('$email',
-                    style: TextStyle(
-                      fontSize: 16,
-                    )),
+                FutureBuilder(
+                  future: setEmail(),
+                  builder:(context, snapshot) {
+
+                    return  Text('$email',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ));
+                  },
+                ),
                 SizedBox(height: 20),
                 Text("New Password",
                     style:
