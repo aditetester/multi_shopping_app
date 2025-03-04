@@ -19,15 +19,9 @@ class ProfilePageScreen extends ConsumerStatefulWidget {
 class _ProfilePageScreenState extends ConsumerState<ProfilePageScreen> {
   String? email;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Future<void> setEmail() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     email = prefs.getString('emailid');
-    
   }
 
   final Map<String, String> _authData = {
@@ -71,7 +65,9 @@ class _ProfilePageScreenState extends ConsumerState<ProfilePageScreen> {
               _authData['password'] as String,
             );
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Password updated successfully!")),
+          SnackBar(
+            content: Text("Password updated successfully!"),
+          ),
         );
         _passwordController.clear();
         _reEnterPasswordController.clear();
@@ -144,12 +140,11 @@ class _ProfilePageScreenState extends ConsumerState<ProfilePageScreen> {
                     )),
                 FutureBuilder(
                   future: setEmail(),
-                  builder:(context, snapshot) {
-
-                    return  Text('$email',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ));
+                  builder: (context, snapshot) {
+                    return Text('$email',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ));
                   },
                 ),
                 SizedBox(height: 20),
