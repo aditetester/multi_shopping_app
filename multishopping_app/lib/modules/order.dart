@@ -46,28 +46,29 @@ class Orders extends Notifier<Set<Product>> {
     final List<OrderItem> loadedOrders = [];
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
     if (extractedData.isEmpty) {
-      return;
+      return ;
+    } else {
+      extractedData.forEach((orderId, orderData) {
+        loadedOrders.add(
+          OrderItem(
+            id: orderId,
+            amount: orderData['amount'],
+            dateTime: DateTime.parse(orderData['dateTime']),
+            products: (orderData['products'] as List<dynamic>)
+                .map(
+                  (item) => CartItem(
+                    id: item['id'],
+                    price: item['price'],
+                    quantity: item['quantity'],
+                    title: item['title'],
+                  ),
+                )
+                .toList(),
+          ),
+        );
+      });
+      _orders = loadedOrders.reversed.toList();
     }
-    extractedData.forEach((orderId, orderData) {
-      loadedOrders.add(
-        OrderItem(
-          id: orderId,
-          amount: orderData['amount'],
-          dateTime: DateTime.parse(orderData['dateTime']),
-          products: (orderData['products'] as List<dynamic>)
-              .map(
-                (item) => CartItem(
-                  id: item['id'],
-                  price: item['price'],
-                  quantity: item['quantity'],
-                  title: item['title'],
-                ),
-              )
-              .toList(),
-        ),
-      );
-    });
-    _orders = loadedOrders.reversed.toList();
   }
 
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {

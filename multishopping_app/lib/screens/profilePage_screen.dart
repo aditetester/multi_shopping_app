@@ -62,14 +62,22 @@ class _ProfilePageScreenState extends ConsumerState<ProfilePageScreen> {
 
     if (newPassword.isNotEmpty && reEnterNewPassword.isNotEmpty) {
       try {
-        await ref.read(authNotifierProvider.notifier).changePassword(
-              _authData['password'] as String,
-            );
+        FutureBuilder(
+          future: ref.read(authNotifierProvider.notifier).changePassword(
+                _authData['password'] as String,
+              ),
+          builder: (context, snapshot) {
+            return snapshot.connectionState == ConnectionState.done
+                ? Container()
+                : CircularProgressIndicator();
+          },
+        );
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Password updated successfully!"),
           ),
         );
+
         _passwordController.clear();
         _reEnterPasswordController.clear();
       } on HttpException catch (error) {

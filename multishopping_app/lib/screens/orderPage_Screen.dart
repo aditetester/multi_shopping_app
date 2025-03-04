@@ -7,17 +7,17 @@ import 'package:multishopping_app/screens/tabView_screen.dart';
 import 'package:multishopping_app/widgets/badgeView.dart';
 import 'package:multishopping_app/widgets/order_detail_item.dart';
 
-class OrderPageScreen extends ConsumerWidget {
+class OrderPageScreen extends ConsumerStatefulWidget {
   const OrderPageScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    late final orderData;
-    Future<bool> fatchData() async {
-      await ref.read(orderNotifierProvider.notifier).fetchAndSetOrders();
-      orderData = ref.read(orderNotifierProvider.notifier);
-      return true;
-    }
+  ConsumerState<OrderPageScreen> createState() => _OrderPageScreenState();
+}
+
+class _OrderPageScreenState extends ConsumerState<OrderPageScreen> {
+  @override
+  Widget build(BuildContext context) {
+    final orderData = ref.read(orderNotifierProvider.notifier);
 
     final appBarView = AppBar(
       title: Text("Your Orders"),
@@ -51,9 +51,9 @@ class OrderPageScreen extends ConsumerWidget {
     return Scaffold(
       appBar: appBarView,
       body: FutureBuilder(
-        future: fatchData(),
+        future: ref.read(orderNotifierProvider.notifier).fetchAndSetOrders(),
         builder: (context, snapshot) {
-          return snapshot.data == true
+          return snapshot.connectionState == ConnectionState.done
               ? orderData.orders.length.toString() != '0'
                   ? ListView.builder(
                       itemCount: orderData.orders.length,
@@ -75,7 +75,7 @@ class OrderPageScreen extends ConsumerWidget {
                           Container(
                               alignment: Alignment.bottomCenter,
                               child: Text(
-                                "No Order Placed Yet..!",
+                                "Order Placed Yet..!",
                                 style: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold),
                               ))
