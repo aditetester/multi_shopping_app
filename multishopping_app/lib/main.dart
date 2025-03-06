@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:multishopping_app/constants/app_theme.dart';
 import 'package:multishopping_app/language/language_store.dart';
 import 'package:multishopping_app/locale/app_localization.dart';
 import 'package:multishopping_app/modules/theme_module.dart';
@@ -10,7 +11,6 @@ import 'package:multishopping_app/screens/products_screen.dart';
 import 'package:multishopping_app/screens/tabView_screen.dart';
 import 'package:multishopping_app/theme/theme_store.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,35 +31,9 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'MultiShopping App',
           theme: _themeStore.darkMode
-              ? ThemeData(
-                  brightness: Brightness.dark,
-                  scaffoldBackgroundColor:
-                      Colors.grey[600], // Dark but not completely black
-                  colorScheme: ColorScheme.fromSeed(
-                    seedColor: Colors.deepPurple,
-                    brightness: Brightness.dark,
-                  ),
-                  useMaterial3: true,
-                  appBarTheme: AppBarTheme(
-                    backgroundColor:
-                        Colors.deepPurple[700], // A dark purple for contrast
-                  ),
-                  bottomAppBarTheme: BottomAppBarTheme(
-                    color: Colors.deepPurple[800], // A slightly darker purple
-                  ),
-                )
-              : ThemeData(
-                  scaffoldBackgroundColor: Colors.amber[50],
-                  colorScheme:
-                      ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-                  useMaterial3: true,
-                  appBarTheme: AppBarTheme(
-                    backgroundColor: Colors.deepPurple[100],
-                  ),
-                  bottomAppBarTheme: BottomAppBarTheme(
-                    color: Colors.deepPurple[300],
-                  ),
-                ),
+              ? AppThemeData.darkTheme
+              : AppThemeData.lightTheme,
+          key: ValueKey(_languageStore.locale),
           locale: Locale(_languageStore.locale),
           supportedLocales: _languageStore.supportedLanguages
               .map((language) => Locale(language.locale, language.code))
