@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:multishopping_app/modules/products.dart';
 
 class CartItem {
   final String id;
@@ -20,7 +19,7 @@ class CartItem {
 class Cart extends Notifier<Map<String, CartItem>> {
   @override
   Map<String, CartItem> build() {
-    return {}; // ✅ Initialize with an empty map
+    return {}; 
   }
 
   Map<String, CartItem> get allCartItems => state;

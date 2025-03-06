@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
+import 'package:multishopping_app/language/language_store.dart';
+import 'package:multishopping_app/locale/app_localization.dart';
 import 'package:multishopping_app/modules/auth.dart';
 import 'package:multishopping_app/modules/http_exception.dart';
 import 'package:multishopping_app/screens/tabView_screen.dart';
@@ -22,6 +24,7 @@ class ProfilePageScreen extends ConsumerStatefulWidget {
 
 class _ProfilePageScreenState extends ConsumerState<ProfilePageScreen> {
   final ThemeStore _themeStore = GetIt.instance<ThemeStore>();
+  final LanguageStore _languageStore = GetIt.instance<LanguageStore>();
   String? email;
 
   Future<void> setEmail() async {
@@ -116,11 +119,78 @@ class _ProfilePageScreenState extends ConsumerState<ProfilePageScreen> {
     );
   }
 
+  Widget _buildLanguageButton() {
+    return IconButton(
+      onPressed: () {
+        _buildLanguageDialog();
+      },
+      icon: Icon(
+        Icons.language,
+      ),
+    );
+  }
+
+  _buildLanguageDialog() {
+    _showDialog<String>(
+      context: context,
+      child: AlertDialog(
+        // borderRadius: 5.0,
+        // enableFullWidth: true,
+
+        title: Text(
+          AppLocalizations.of(context).translate('home_tv_choose_language'),
+        ),
+        // headerColor: Theme.of(context).primaryColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        // closeButtonColor: Colors.white,
+        // enableCloseButton: true,
+        // enableBackButton: false,
+        // onCloseButtonClicked: () {
+        //   Navigator.of(context).pop();
+        // },
+        actions: _languageStore.supportedLanguages
+            // children: _languageStore.supportedLanguages
+            .map(
+              (object) => ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.all(0.0),
+                title: Text(
+                  object.language,
+                  style: TextStyle(
+                    color: _languageStore.locale == object.locale
+                        ? Theme.of(context).primaryColor
+                        : _themeStore.darkMode
+                            ? Colors.white
+                            : Colors.black,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  // change user language based on selected locale
+                  _languageStore.changeLanguage(object.locale);
+                },
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
+
+  _showDialog<T>({required BuildContext context, required Widget child}) {
+    showDialog<T>(
+      context: context,
+      builder: (BuildContext context) => child,
+    ).then<void>((T? value) {
+      // The value passed to Navigator.pop() or null.
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final appBarView = AppBar(
       title: Text("Your Profile"),
       actions: [
+        _buildLanguageButton(),
         _buildThemeButton(),
         PopupMenuButton(
           icon: Icon(Icons.more_vert),
