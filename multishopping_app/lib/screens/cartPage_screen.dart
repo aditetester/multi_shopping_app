@@ -73,7 +73,6 @@ class _CartPageScreenState extends ConsumerState<CartPageScreen> {
                           },
                     child: Text(
                       'ORDER NOW',
-                      style: TextStyle(color: Theme.of(context).primaryColor),
                     ),
                   ),
                 ],

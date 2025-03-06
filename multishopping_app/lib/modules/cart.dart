@@ -1,6 +1,5 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multishopping_app/modules/products.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-part 'cart.g.dart';
 
 class CartItem {
   final String id;
@@ -17,106 +16,80 @@ class CartItem {
     this.isItemInCart = false,
   });
 }
-class Cart extends Notifier<Set<Product>> {
+
+class Cart extends Notifier<Map<String, CartItem>> {
   @override
-  Set<Product> build() {
-    throw UnimplementedError();
+  Map<String, CartItem> build() {
+    return {}; // ✅ Initialize with an empty map
   }
 
-  Map<String, CartItem> get allCartItems {
-    return {..._cartItems};
-  }
+  Map<String, CartItem> get allCartItems => state;
 
-  int get itemCount {
-    return _cartItems.length;
-  }
+  int get itemCount => state.length;
 
   double get totalAmount {
-    var total = 0.0;
-    _cartItems.forEach((key, cartItem) {
-      total += cartItem.price * cartItem.quantity;
+    return state.values.fold(0.0, (sum, cartItem) {
+      return sum + (cartItem.price * cartItem.quantity);
     });
-    return total;
   }
 
-  void addItems(
-    String productId,
-    String title,
-    double price,
-    bool inCart,
-  ) {
-    if (_cartItems.containsKey(productId)) {
-      _cartItems.update(
-        productId,
-        (oldvalue) => CartItem(
-          id: oldvalue.id,
-          title: oldvalue.title,
-          price: oldvalue.price,
-          quantity: oldvalue.quantity + 1,
-          isItemInCart: oldvalue.isItemInCart,
-        ),
-      );
-    } else {
-      _cartItems.putIfAbsent(
-        productId,
-        () => CartItem(
-          id: DateTime.now().toString(),
-          title: title,
-          price: price,
-          quantity: 1,
-          isItemInCart: inCart,
-        ),
-      );
-    }
+  void addItems(String productId, String title, double price) {
+    state = {
+      ...state,
+      productId: state.containsKey(productId)
+          ? CartItem(
+              id: state[productId]!.id,
+              title: state[productId]!.title,
+              price: state[productId]!.price,
+              quantity: state[productId]!.quantity + 1,
+              isItemInCart: true,
+            )
+          : CartItem(
+              id: DateTime.now().toString(),
+              title: title,
+              price: price,
+              quantity: 1,
+              isItemInCart: true,
+            ),
+    };
   }
 
   bool isAvailableInCart(String productId) {
-    if (_cartItems.containsKey(productId)) {
-      return _cartItems[productId]!.isItemInCart;
-    } else {
-      return false;
-    }
+    return state.containsKey(productId);
   }
 
   int particularItemTotal(String productId) {
-    return _cartItems[productId]!.quantity;
+    return state[productId]?.quantity ?? 0;
   }
 
   void removeItem(String productId) {
-    _cartItems.remove(productId);
+    state = {...state}..remove(productId);
   }
 
   void removeSingleItem(String productId) {
-    if (!_cartItems.containsKey(productId)) {
-      return;
-    }
-    if (_cartItems[productId]!.quantity > 1) {
-      _cartItems.update(
-          productId,
-          (existingCartItem) => CartItem(
-                id: existingCartItem.id,
-                title: existingCartItem.title,
-                price: existingCartItem.price,
-                quantity: existingCartItem.quantity - 1,
-                isItemInCart: existingCartItem.isItemInCart,
-              ));
+    if (!state.containsKey(productId)) return;
+
+    if (state[productId]!.quantity > 1) {
+      state = {
+        ...state,
+        productId: CartItem(
+          id: state[productId]!.id,
+          title: state[productId]!.title,
+          price: state[productId]!.price,
+          quantity: state[productId]!.quantity - 1,
+          isItemInCart: true,
+        ),
+      };
     } else {
-      _cartItems.remove(productId);
+      removeItem(productId);
     }
   }
 
   void clear() {
-    _cartItems = {};
+    state = {};
   }
 }
 
-final cartNotifierProvider = NotifierProvider<Cart, Set<Product>>(() {
+final cartNotifierProvider = NotifierProvider<Cart, Map<String, CartItem>>(() {
   return Cart();
 });
-
-Map<String, CartItem> _cartItems = {};
-
-@riverpod
-Map<String, CartItem> allCartItems(ref) {
-  return _cartItems;
-}

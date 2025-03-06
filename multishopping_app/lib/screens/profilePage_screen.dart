@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_it/get_it.dart';
 import 'package:multishopping_app/modules/auth.dart';
 import 'package:multishopping_app/modules/http_exception.dart';
 import 'package:multishopping_app/screens/tabView_screen.dart';
+import 'package:multishopping_app/theme/theme_store.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +21,7 @@ class ProfilePageScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageScreenState extends ConsumerState<ProfilePageScreen> {
+  final ThemeStore _themeStore = GetIt.instance<ThemeStore>();
   String? email;
 
   Future<void> setEmail() async {
@@ -97,11 +101,27 @@ class _ProfilePageScreenState extends ConsumerState<ProfilePageScreen> {
     }
   }
 
+  Widget _buildThemeButton() {
+    return Observer(
+      builder: (context) {
+        return IconButton(
+          onPressed: () {
+            _themeStore.changeBrightnessToDark(!_themeStore.darkMode);
+          },
+          icon: Icon(
+            _themeStore.darkMode ? Icons.brightness_5 : Icons.brightness_3,
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final appBarView = AppBar(
       title: Text("Your Profile"),
       actions: [
+        _buildThemeButton(),
         PopupMenuButton(
           icon: Icon(Icons.more_vert),
           onSelected: (selectedvalue) {
